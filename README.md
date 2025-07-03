@@ -1,26 +1,29 @@
-# Express.js + PostgreSQL CRUD API
+# Express.js + PostgreSQL CRUD API (Refactored)
 
-## Objective
-Create a simple Express.js API that connects to a PostgreSQL database and performs basic CRUD operations.
+## Features
+- Secure `.env` configuration
+- Separated routes, controllers, middleware, and config
+- Input validation
+- Clean project structure
 
----
+## Setup
 
-## Requirements
-✅ Working Express.js server  
-✅ PostgreSQL database connection  
-✅ All CRUD operations (Create, Read, Update, Delete)  
-✅ Basic error handling  
-✅ Testable via Postman or similar tools
+### 1. Clone the project and install dependencies
+```bash
+npm install express pg dotenv
+```
 
----
+### 2. Create `.env` file based on `.env.example`
+```env
+DB_USER=your_username
+DB_HOST=localhost
+DB_NAME=your_database
+DB_PASSWORD=your_password
+DB_PORT=5432
+PORT=3000
+```
 
-## Setup Instructions
-
-### 1. Install PostgreSQL and Node.js
-Ensure PostgreSQL and Node.js are installed on your machine.
-
-### 2. Create a PostgreSQL Database
-Run the following SQL in your PostgreSQL client:
+### 3. Create the database table
 ```sql
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -30,67 +33,33 @@ CREATE TABLE users (
 );
 ```
 
-### 3. Install dependencies
+### 4. Run the server
 ```bash
-npm init -y
-npm install express pg
+node src/index.js
 ```
-
-### 4. Configure PostgreSQL connection
-Update the `Pool` settings in `index.js`:
-```js
-const pool = new Pool({
-  user: 'your_username',
-  host: 'localhost',
-  database: 'your_database',
-  password: 'your_password',
-  port: 5432,
-});
-```
-
-### 5. Run the server
-```bash
-node index.js
-```
-
-Server will run at: `http://localhost:3000`
-
----
 
 ## API Endpoints
+- `GET /users` – Get all users
+- `GET /users/:id` – Get user by ID
+- `POST /users` – Create user (requires `name`, `email`, `age`)
+- `PUT /users/:id` – Update user (requires `name`, `email`, `age`)
+- `DELETE /users/:id` – Delete user
 
-### GET `/users`
-Returns all users
+## Input Validation
+All POST and PUT requests are validated to ensure:
+- `name` and `email` are non-empty
+- `age` is a number
 
-### GET `/users/:id`
-Returns a specific user
-
-### POST `/users`
-Creates a new user  
-**Body:**
-```json
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "age": 30
-}
+## Folder Structure
 ```
-
-### PUT `/users/:id`
-Updates a user  
-**Body:**
-```json
-{
-  "name": "Jane Doe",
-  "email": "jane@example.com",
-  "age": 28
-}
+src/
+├── config/
+│   └── db.js
+├── controllers/
+│   └── userController.js
+├── routes/
+│   └── userRoutes.js
+├── middlewares/
+│   └── validateUser.js
+└── index.js
 ```
-
-### DELETE `/users/:id`
-Deletes a user
-
----
-
-## Testing
-Use Postman or Curl to test the above endpoints.
